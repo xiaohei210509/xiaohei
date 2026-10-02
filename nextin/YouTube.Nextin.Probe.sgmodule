@@ -1,0 +1,12 @@
+#!name=YouTube - Raw Pass-through Probe
+#!desc=Diagnostic only. No body changes; response types are reported locally.
+
+[Rule]
+AND,((DOMAIN-SUFFIX,googlevideo.com),(PROTOCOL,UDP)),REJECT
+AND,((DOMAIN,youtubei.googleapis.com),(PROTOCOL,UDP)),REJECT
+
+[Script]
+youtube.probe = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch)(\?.*)?$,requires-body=true,binary-body-mode=true,max-size=33554432,timeout=30,script-path=https://raw.githubusercontent.com/xiaohei210509/xiaohei/1fe1c486c7773ef968e57c014fd7340531ee9ce6/nextin/YouTube.Nextin.Probe.js
+
+[MITM]
+hostname = youtubei.googleapis.com
