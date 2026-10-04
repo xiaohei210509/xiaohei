@@ -1,0 +1,16 @@
+#!name =  iRingo: 🗺️ MapKit (Nextin)
+#!desc = iRingo MapKit Rewrite adapted for Nextin; fixed endpoint: mapkit.pages.dev
+#!author = VirgilClyne / Nextin adaptation
+#!homepage = https://NSRingo.github.io/guide/GeoServices/maps
+#!category =  iRingo
+
+[URL Rewrite]
+# 🗺️ Network Defaults
+^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults https://mapkit.pages.dev/config/defaults header
+# 🗺️ Announcements
+^https?:\/\/gspe35-ssl\.ls\.apple\.com\/config\/announcements https://mapkit.pages.dev/config/announcements header
+# 🗺️ Resource Manifest
+^https?:\/\/gspe35-ssl\.ls\.apple\.com\/geo_manifest\/dynamic\/config https://mapkit.pages.dev/geo_manifest/dynamic/config header
+
+[MITM]
+hostname = configuration.ls.apple.com, gspe35-ssl.ls.apple.com
