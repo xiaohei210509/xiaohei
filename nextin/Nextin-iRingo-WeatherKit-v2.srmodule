@@ -19,8 +19,6 @@ AND,((OR,((IP-ASN,714,no-resolve),(IP-ASN,6185,no-resolve))),(PROTOCOL,QUIC)),RE
 # 🌫 WeatherKit.api.v1.airQualityScale.request
 ^https?:\/\/weatherkit\.apple\.com\/api\/v1\/airQualityScale\/ https://weatherkit.pages.dev/api/v1/airQualityScale/ header
 # 🌤 WeatherKit.api.v2.weather.response
-# Force numeric China AQI (HJ6332012) instead of the default EU EAQI
-^https?:\/\/weatherkit\.apple\.com\/api\/v2\/weather\/(.+)\?(.+)$ https://weatherkit.pages.dev/api/v2/weather/$1?$2&AirQuality.Calculate.Algorithm=WAQI_InstantCast_CN&AirQuality.Current.Index.Provider=Calculate header
 ^https?:\/\/weatherkit\.apple\.com\/api\/v2\/weather\/ https://weatherkit.pages.dev/api/v2/weather/ header
 # 🌤 WeatherKit.api.v1.weatherAlerts.response
 ^https?:\/\/weatherkit\.apple\.com\/api\/v1\/weatherAlerts\?([^#]*&ids=[^&#]*-[0-9]{9}(?:&[^#]*)?)$ https://weatherkit.pages.dev/api/v1/weatherAlerts?$1 header
