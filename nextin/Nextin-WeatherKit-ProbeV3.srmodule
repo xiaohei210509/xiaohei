@@ -1,0 +1,14 @@
+#!name = WeatherKit Nextin Probe V3
+#!desc = Diagnostic only.
+
+[General]
+force-http-engine-hosts = weatherkit.apple.com:0
+
+[URL Rewrite]
+^https?:\/\/weatherkit\.apple\.com\/api\/v2\/weather\/ https://weatherkit.pages.dev/api/v2/weather/ header
+
+[Script]
+weather.probe = type=http-response,pattern=^https?:\/\/weatherkit\.apple\.com\/api\/v2\/weather\/.*$,requires-body=true,binary-body-mode=true,max-size=33554432,timeout=30,script-path=https://raw.githubusercontent.com/xiaohei210509/xiaohei/main/nextin/YouTube.Nextin.Probe.js
+
+[MITM]
+hostname = weatherkit.apple.com
