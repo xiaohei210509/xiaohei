@@ -4,9 +4,12 @@
 #!homepage = https://NSRingo.github.io/guide/Weather/weather-kit
 #!category =  iRingo
 
+[General]
+force-http-engine-hosts = weatherkit.apple.com:0
+
 [Rule]
 # Force WeatherKit QUIC/HTTP3 to fall back to HTTPS/TCP so MITM rewrite can apply.
-AND,((PROTOCOL,QUIC),(DOMAIN,weatherkit.apple.com)),REJECT-DROP
+AND,((OR,((IP-ASN,714,no-resolve),(IP-ASN,6185,no-resolve))),(PROTOCOL,QUIC)),REJECT-DROP
 
 [URL Rewrite]
 # 🧪 Nextin rewrite self-test
