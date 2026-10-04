@@ -1,0 +1,38 @@
+#!name =  iRingo: 🌤 WeatherKit Hybrid AQI (Nextin EXP)
+#!desc = Experimental: keep EU EAQI grading/colour/health advice, append China HJ6332012 numeric value to the displayed category label.
+#!author = NSRingo upstream / Nextin experimental adaptation
+#!homepage = https://NSRingo.github.io/guide/Weather/weather-kit
+#!category =  iRingo
+
+[General]
+force-http-engine-hosts = weatherkit.apple.com:0
+
+[Rule]
+AND,((OR,((IP-ASN,714,no-resolve),(IP-ASN,6185,no-resolve))),(PROTOCOL,QUIC)),REJECT-DROP
+
+[URL Rewrite]
+# 🧪 Rewrite self-test
+^https?:\/\/weatherkit\.apple\.com\/iringo-nextin-test(?:\?.*)?$ https://captive.apple.com/hotspot-detect.html header
+
+# 🌤 Availability
+^https?:\/\/weatherkit\.apple\.com\/api\/v1\/availability\/ https://weatherkit.pages.dev/api/v1/availability/ header
+
+# 🌫 Hybrid scale alias, e.g. E042AQI.2604 -> EU.EAQI.2604
+^https?:\/\/weatherkit\.apple\.com\/api\/v1\/airQualityScale\/([^\/]+)\/E([0-9]{3})AQI(\.[^\/?#]+)?$ https://weatherkit.pages.dev/api/v1/airQualityScale/$1/EU.EAQI$3?HybridIndex=$2 header
+
+# 🌫 Normal scale fallback
+^https?:\/\/weatherkit\.apple\.com\/api\/v1\/airQualityScale\/ https://weatherkit.pages.dev/api/v1/airQualityScale/ header
+
+# 🌤 Main WeatherKit data
+^https?:\/\/weatherkit\.apple\.com\/api\/v2\/weather\/ https://weatherkit.pages.dev/api/v2/weather/ header
+
+# ⚠️ Weather alerts
+^https?:\/\/weatherkit\.apple\.com\/api\/v1\/weatherAlerts\?([^#]*&ids=[^&#]*-[0-9]{9}(?:&[^#]*)?)$ https://weatherkit.pages.dev/api/v1/weatherAlerts?$1 header
+^https?:\/\/weatherkit\.apple\.com\/api\/v1\/weatherAlerts\?([^#]*&ids=-?[0-9]+(?:\.[0-9]+)?,-?[0-9]+(?:\.[0-9]+)?(?:&[^#]*)?)$ https://weatherkit.pages.dev/api/v1/weatherAlerts?$1 header
+
+[Script]
+weather.hybrid.scale = type=http-response,pattern=^https?:\/\/weatherkit\.apple\.com\/api\/v1\/airQualityScale\/[^\/]+\/E[0-9]{3}AQI(?:\.[^\/?#]+)?(?:\?.*)?$,requires-body=true,max-size=1048576,timeout=30,script-path=https://raw.githubusercontent.com/xiaohei210509/xiaohei/19528ceb8d73838eb4ccaf4a73bf25639028d599/nextin/WeatherKit.HybridAQI.Nextin.js
+weather.hybrid.main = type=http-response,pattern=^https?:\/\/weatherkit\.apple\.com\/api\/v2\/weather\/.*$,requires-body=true,binary-body-mode=true,max-size=33554432,timeout=30,script-path=https://raw.githubusercontent.com/xiaohei210509/xiaohei/19528ceb8d73838eb4ccaf4a73bf25639028d599/nextin/WeatherKit.HybridAQI.Nextin.js
+
+[MITM]
+hostname = weatherkit.apple.com
