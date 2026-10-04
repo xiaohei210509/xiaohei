@@ -1,0 +1,26 @@
+#!name =  iRingo: 🌤 WeatherKit (Nextin)
+#!desc = iRingo WeatherKit Rewrite adapted for Nextin; fixed endpoint: weatherkit.pages.dev
+#!author = VirgilClyne, WordlessEcho, 001, hhh2210 / Nextin adaptation
+#!homepage = https://NSRingo.github.io/guide/Weather/weather-kit
+#!category =  iRingo
+
+[General]
+force-http-engine-hosts = weatherkit.apple.com:0
+
+[Rule]
+# Force WeatherKit QUIC/HTTP3 to fall back to HTTPS/TCP so MITM rewrite can apply.
+AND,((OR,((IP-ASN,714,no-resolve),(IP-ASN,6185,no-resolve))),(PROTOCOL,QUIC)),REJECT-DROP
+
+[URL Rewrite]
+# 🧪 Nextin rewrite self-test
+^https?:\/\/weatherkit\.apple\.com\/iringo-nextin-test(?:\?.*)?$ https://captive.apple.com/hotspot-detect.html header
+# 🌤 WeatherKit.api.v1.availability.response
+^https?:\/\/weatherkit\.apple\.com\/api\/v1\/availability\/ https://weatherkit.pages.dev/api/v1/availability/ header
+# 🌤 WeatherKit.api.v2.weather.response
+^https?:\/\/weatherkit\.apple\.com\/api\/v2\/weather\/ https://weatherkit.pages.dev/api/v2/weather/ header
+# 🌤 WeatherKit.api.v1.weatherAlerts.response
+^https?:\/\/weatherkit\.apple\.com\/api\/v1\/weatherAlerts\?([^#]*&ids=[^&#]*-[0-9]{9}(?:&[^#]*)?)$ https://weatherkit.pages.dev/api/v1/weatherAlerts?$1 header
+^https?:\/\/weatherkit\.apple\.com\/api\/v1\/weatherAlerts\?([^#]*&ids=-?[0-9]+(?:\.[0-9]+)?,-?[0-9]+(?:\.[0-9]+)?(?:&[^#]*)?)$ https://weatherkit.pages.dev/api/v1/weatherAlerts?$1 header
+
+[MITM]
+hostname = weatherkit.apple.com
